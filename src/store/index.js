@@ -9,13 +9,15 @@ const counterSlice = createSlice({
   initialState: initState,
   reducers: {
     increase: (state, action) => {
-      state.value += 1;
+      state.value += action.payload;
     },
     decrease: (state, action) => {
-      state.value -= 1;
+      state.value -= action.payload;
     },
   },
 });
+export const counterAction = counterSlice.actions;
+
 const store = createStore(counterSlice.reducer);
 
 // const counterReducer = (state = initState, action) => {
