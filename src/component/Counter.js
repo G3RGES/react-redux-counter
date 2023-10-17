@@ -1,10 +1,25 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { counterAction } from "../store";
+// ACTIONS
+import { increase, decrease } from "../store/counterSlice";
+import { logIn, logOut } from "../store/authSlice";
 export default function Counter() {
-  const globalState = useSelector((state) => state);
+  const globalState = useSelector((state) => {
+    // console.log(state);//TESTING
+    return state;
+  });
   const dispatch = useDispatch();
-  const { increase, decrease } = counterAction;
+  const isLoggedIn = () => {
+    return globalState.auth.isLoggedIn;
+  };
+  const loginHandler = (status) => {
+    // console.log(status);//TESTING
+    if (status) {
+      dispatch(logOut());
+    } else {
+      dispatch(logIn());
+    }
+  };
   // //* ONE WAY TO DO IT
   // const globalState = useSelector((state) => state);
 
@@ -51,35 +66,43 @@ export default function Counter() {
     <div className="App">
       <h1>Hello Redux Basic</h1>
       {/* {globalState.counter && ( */}
-      <>
-        <div className="counter">
-          Counter:
-          {globalState.value}
-        </div>
-        <div>
-          <button
-            className="btn"
-            onClick={() => dispatch(increase(4))}
-            // onClick={increase}
-          >
-            increase +
-          </button>
-          <button
-            className="btn"
-            onClick={() => dispatch(decrease(2))}
-            // onClick={decrease}
-          >
-            decrease -
-          </button>
-        </div>
-      </>
+      {isLoggedIn() && (
+        <>
+          <div className="counter">
+            Counter:
+            {globalState.counter.value}
+          </div>
+          <div>
+            <button
+              className="btn"
+              onClick={() => dispatch(increase(4))}
+              // onClick={increase}
+            >
+              increase +
+            </button>
+            <button
+              className="btn"
+              onClick={() => dispatch(decrease(2))}
+              // onClick={decrease}
+            >
+              decrease -
+            </button>
+          </div>
+        </>
+      )}
+
       {/* )} */}
       <div>
-        <button
+        {/* <button
           className="btn"
           // onClick={toggleCounter}
         >
           Hide/Show Counter Number
+        </button> */}
+        {/* SAME AS HIDE/SHOW BUT AS AN AUTH LOGING/LOGOUT */}
+        <button className="btn" onClick={() => loginHandler(isLoggedIn())}>
+          {" "}
+          {isLoggedIn() ? "logout" : "login"}{" "}
         </button>
       </div>
     </div>
